@@ -1,12 +1,13 @@
 import { onRequest } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
+import { getUser } from "./models/user";
+import { getBehaviorPosts, putBehaviorPosts } from "./models/behavior";
 
 import { authentication } from "./utils/middleware";
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import helmet from "helmet";
-import { getUser } from "./models/user";
 
 const app = express();
 const main = express();
@@ -24,13 +25,9 @@ app.use(authentication);
 
 app.get("/user", getUser);
 
-app.get("/behavior", (req, res) => {
-  res.status(200).send("Get /behavior successfully");
-});
+app.get("/behavior", getBehaviorPosts);
 
-app.put("/behavior", (req, res) => {
-  res.status(200).send("Patch /behavior successfully");
-});
+app.put("/behavior", putBehaviorPosts);
 
 // export const user = onRequest((request, response) => {
 //   const cookies = request.cookies;

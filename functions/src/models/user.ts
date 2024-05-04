@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { success, error } from "../helpers/response";
+import { success } from "../helpers/response";
 import { decodeJwt } from "../utils/decodeJwt";
 import { ErrorObj } from "../interface/I_Common";
+import { errorHandler } from "../helpers/errorHandler";
 
 const prisma = new PrismaClient();
 
@@ -49,11 +50,7 @@ export const getUser = async (
     return res.status(200).json(success({ data: profile }));
   } catch (e) {
     const err = e as ErrorObj;
-    const statusCode = err.statusCode || 500;
-    const errorMsg = err.message || "Internal server error";
 
-    return res
-      .status(statusCode)
-      .json(error({ status: statusCode, messages: [errorMsg] }));
+    return errorHandler(err, res);
   }
 };
