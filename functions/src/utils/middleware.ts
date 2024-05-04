@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { JwtPayload, decode } from "jsonwebtoken";
+import { decodeJwt } from "./decodeJwt";
 import { validateError } from "../helpers/response";
 import dayjs = require("dayjs");
 
@@ -11,11 +11,9 @@ export const authentication = (
   try {
     const authorizationHeader = req.header("Authorization");
 
-    // Didn't pass token
-    if (!authorizationHeader) throw new Error();
-
-    const token = authorizationHeader.replace("Bearer ", "");
-    const payload = decode(token) as JwtPayload;
+    // decode Bearer token and return jwt payload
+    // (throw error if something went wrong)
+    const payload = decodeJwt(authorizationHeader);
 
     // Check expiration
     const current = dayjs();

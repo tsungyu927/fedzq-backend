@@ -13,16 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model users {
   id  String  @id @default(auto())  @map("_id") @db.ObjectId
   kindeJit String @unique
   name  String
-  behaviorPosts BehaviorPost[]
+  behaviorPosts behavior_posts[]
 }
 
-model BehaviorPost {
+model behavior_posts {
   id  String  @id @default(auto())  @map("_id") @db.ObjectId
-  author User @relation(fields: [authorId], references: [id])
+  author users @relation(fields: [authorId], references: [id])
   authorId String @db.ObjectId
   title String
   description String
