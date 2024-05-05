@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { success } from "../helpers/response";
-import { decodeJwt } from "../utils/decodeJwt";
+import { decodeJwt } from "../utils/decoder";
 import { ErrorObj } from "../interface/I_Common";
 import { errorHandler } from "../helpers/errorHandler";
 

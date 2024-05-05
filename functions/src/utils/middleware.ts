@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { decodeJwt } from "./decodeJwt";
+import { decodeJwt } from "./decoder";
 import { validateError } from "../helpers/response";
-import dayjs = require("dayjs");
+import * as dayjs from "dayjs";
+
+export const header = (req: Request, res: Response, next: NextFunction) => {
+  res.header("Content-Type", "application/json");
+  next();
+};
 
 export const authentication = (
   req: Request,

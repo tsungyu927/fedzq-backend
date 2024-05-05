@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "fedzq-backend"
-  }
+    "default": "fedzq-api"
+  },
+  "targets": {},
+  "etags": {}
 }
