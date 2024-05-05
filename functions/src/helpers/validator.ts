@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { PutBehaviorPosts } from "../models/behavior";
 import { error } from "./response";
+import * as _ from "lodash";
 
 export const validatePutBehavior = (
   req: Request<unknown, unknown, PutBehaviorPosts>,
@@ -16,7 +17,9 @@ export const validatePutBehavior = (
   ];
 
   // Check if all required fields are present and have values
-  const missingFields = requiredFields.filter((field) => !req.body[field]);
+  const missingFields = requiredFields.filter((field) =>
+    _.isNil(req.body[field])
+  );
 
   if (missingFields.length > 0) {
     const errorMsgs = missingFields.map(
