@@ -8,6 +8,7 @@ import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import helmet from "helmet";
+import { validatePutBehavior } from "./helpers/validator";
 
 const app = express();
 const main = express();
@@ -28,7 +29,7 @@ app.get("/user", getUser);
 
 app.get("/behavior", getBehaviorPosts);
 
-app.put("/behavior", putBehaviorPosts);
+app.put("/behavior", validatePutBehavior, putBehaviorPosts);
 
 // deploy functions to asia-east1 (Taiwan)
 setGlobalOptions({ region: "asia-east1" });
