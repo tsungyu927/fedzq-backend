@@ -3,7 +3,7 @@ import { onRequest } from "firebase-functions/v2/https";
 import { getUser } from "./models/user";
 import { getBehaviorPosts, putBehaviorPosts } from "./models/behavior";
 
-import { authentication, header } from "./utils/middleware";
+import { authentication, header, monitor } from "./utils/middleware";
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import * as express from "express";
@@ -24,6 +24,7 @@ app.use(cors());
 app.use(helmet());
 app.use(header);
 app.use(authentication);
+app.use(monitor);
 
 app.get("/user", getUser);
 

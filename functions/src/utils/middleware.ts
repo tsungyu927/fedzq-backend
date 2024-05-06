@@ -1,3 +1,4 @@
+import { logger } from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
 import { decodeJwt } from "./decoder";
 import { validateError } from "../helpers/response";
@@ -41,4 +42,17 @@ export const authentication = (
       })
     );
   }
+};
+
+export const monitor = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  logger.info(`API call: ${req.method} ${req.baseUrl}${req.path}`, {
+    cookies: req.cookies,
+    header: req.headers,
+  });
+
+  next();
 };
