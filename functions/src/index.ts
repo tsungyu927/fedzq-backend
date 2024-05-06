@@ -20,11 +20,11 @@ main.use(bodyParser.json());
 main.use(bodyParser.urlencoded({ extended: false }));
 
 // auth user token
+app.use(monitor);
 app.use(cors());
 app.use(helmet());
 app.use(header);
 app.use(authentication);
-app.use(monitor);
 
 app.get("/user", getUser);
 
