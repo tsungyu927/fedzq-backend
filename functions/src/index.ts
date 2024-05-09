@@ -1,41 +1,32 @@
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onRequest } from "firebase-functions/v2/https";
-import { getUser } from "./models/user";
-import { getBehaviorPosts, putBehaviorPosts } from "./models/behavior";
 
-import { authentication, header, monitor } from "./utils/middleware";
+import { authToken, errorHandler, header, monitor } from "./utils/middleware";
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import helmet from "helmet";
-import { validatePutBehavior } from "./helpers/validator";
 import { corsOptions } from "./constants/corsOptions";
+import routes from "./app/routes/routes";
 
 const app = express();
-const main = express();
 
 // setup cors
-main.use(monitor);
-main.use(cors(corsOptions));
-main.use("/v1", app);
-main.use(bodyParser.json());
-main.use(bodyParser.urlencoded({ extended: false }));
-
-// auth user token
-// app.use(monitor);
-app.use(cookieParser());
-app.use(helmet());
+app.use(monitor);
 app.use(header);
-// app.use(authentication);
+app.use(helmet());
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/user", getUser);
+// app.use(cookieParser());
+app.use(authToken);
+app.use(routes);
 
-app.get("/behavior", getBehaviorPosts);
-
-app.put("/behavior", validatePutBehavior, putBehaviorPosts);
+app.use(errorHandler);
 
 // deploy functions to asia-east1 (Taiwan)
 setGlobalOptions({ region: "asia-east1" });
 
-export const api = onRequest(main);
+export const api = onRequest(app);

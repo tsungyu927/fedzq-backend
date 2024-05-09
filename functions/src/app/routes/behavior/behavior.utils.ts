@@ -1,7 +1,23 @@
 import { NextFunction, Request, Response } from "express";
-import { PutBehaviorPosts } from "../models/behavior";
-import { error } from "./response";
 import * as _ from "lodash";
+import HttpException from "../../models/http-exception.model";
+import { GetBehaviorPosts, PutBehaviorPosts } from "./I_Behavior";
+
+export const validateGetBehavior = (
+  req: Request<unknown, unknown, unknown, GetBehaviorPosts>,
+  _res: Response,
+  next: NextFunction
+) => {
+  const userId = req.query.userId;
+
+  if (!userId) {
+    throw new HttpException(400, "Missing required parameter: 'userId'");
+  }
+
+  // @ts-ignore
+  req.userId = userId;
+  next();
+};
 
 export const validatePutBehavior = (
   req: Request<unknown, unknown, PutBehaviorPosts>,
@@ -26,7 +42,7 @@ export const validatePutBehavior = (
       (field) => `Missing required parameter: '${field}'`
     );
 
-    return res.status(400).json(error({ status: 400, messages: errorMsgs }));
+    throw new HttpException(400, errorMsgs);
   }
 
   next();

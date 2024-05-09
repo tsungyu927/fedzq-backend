@@ -1,47 +1,57 @@
 import { logger } from "firebase-functions";
 import { Request, Response, NextFunction } from "express";
-import { decodeJwt } from "./decoder";
-import { validateError } from "../helpers/response";
 import * as dayjs from "dayjs";
+
+import { decodeJwt } from "./middleware.utils";
+import HttpException from "../app/models/http-exception.model";
+import { error, validateError } from "../helpers/response";
 
 export const header = (req: Request, res: Response, next: NextFunction) => {
   res.header("Content-Type", "application/json");
   next();
 };
 
-export const authentication = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
+export const authToken = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const authorizationHeader = req.header("Authorization");
-
-    // decode Bearer token and return jwt payload
-    // (throw error if something went wrong)
-    const payload = decodeJwt(authorizationHeader);
+    const token = req.header("Authorization");
+    const jwtPayload = decodeJwt(token);
 
     // Check expiration
     const current = dayjs();
-    const exp = dayjs.unix(payload?.exp || 0);
-
+    const exp = dayjs.unix(jwtPayload?.exp || 0);
     if (current > exp) throw new Error();
 
     // Check jti is exist
-    const jti = payload?.jti;
-    if (!jti) throw new Error();
+    if (!jwtPayload.jti) {
+      throw new Error();
+    }
 
     // Auth successfully
+    // @ts-ignore
+    req.jti = jwtPayload.jti;
     next();
   } catch (error) {
-    console.log(error);
-    res.status(401).json(
-      validateError({
-        status: 401,
-        messages: ["Invalid authorization header"],
-      })
-    );
+    throw new HttpException(401, "Invalid token");
   }
+};
+
+export const errorHandler = (
+  err: HttpException,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  if (err && err.name === "UnauthorizedError") {
+    return res
+      .status(401)
+      .json(validateError({ messages: ["Missing authorization credentials"] }));
+  }
+  if (err && err.errorCode) {
+    return res
+      .status(err.errorCode)
+      .json(error({ status: err.errorCode, messages: err.message }));
+  }
+  return res.status(500).json(error({ messages: err.message }));
 };
 
 export const monitor = (
