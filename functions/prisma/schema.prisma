@@ -15,7 +15,7 @@ datasource db {
 
 model users {
   id  String  @id @default(auto())  @map("_id") @db.ObjectId
-  kindeJit String @unique
+  kindeSub String @unique
   name  String
   behaviorPosts behavior_posts[]
 }

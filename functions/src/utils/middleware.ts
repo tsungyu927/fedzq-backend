@@ -21,14 +21,14 @@ export const authToken = (req: Request, res: Response, next: NextFunction) => {
     const exp = dayjs.unix(jwtPayload?.exp || 0);
     if (current > exp) throw new Error();
 
-    // Check jti is exist
-    if (!jwtPayload.jti) {
+    // Check sub is exist
+    if (!jwtPayload.sub) {
       throw new Error();
     }
 
     // Auth successfully
     // @ts-ignore
-    req.jti = jwtPayload.jti;
+    req.sub = jwtPayload.sub;
     next();
   } catch (error) {
     throw new HttpException(401, "Invalid token");

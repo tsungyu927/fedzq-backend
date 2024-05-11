@@ -1,4 +1,4 @@
-import prisma from "../../../prisma/prisma-client";
+import prisma from "../../../utils/prisma-client";
 import HttpException from "../../models/http-exception.model";
 import { GetBehaviorPosts, PutBehaviorPosts } from "./I_Behavior";
 

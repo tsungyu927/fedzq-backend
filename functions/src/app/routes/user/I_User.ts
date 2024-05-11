@@ -1,9 +1,9 @@
 export type GetUser = {
-  jti: string;
+  sub: string;
   name: string;
 };
 
 export type CreateUser = {
-  jti: string;
+  sub: string;
   name: string;
 };

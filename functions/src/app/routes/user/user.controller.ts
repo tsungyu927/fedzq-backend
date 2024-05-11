@@ -15,11 +15,11 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // @ts-ignore;
-      const jti = req.jti;
+      const sub = req.sub;
       // @ts-ignore;
       const name = req.name;
 
-      const profile = await getUser({ jti, name });
+      const profile = await getUser({ sub, name });
 
       res.status(200).json(success({ data: profile }));
     } catch (error) {
