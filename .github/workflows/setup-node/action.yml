@@ -22,3 +22,7 @@ runs:
       working-directory: ./functions
       if: steps.cache_dependencies.outputs.cache-hit != 'true'
       run: npm ci
+    - name: Re-generate prisma
+      shell: bash
+      working-directory: ./functions
+      run: npx prisma generate
