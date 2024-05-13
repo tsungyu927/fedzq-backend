@@ -9,6 +9,7 @@ To view the demo: [**click here**](https://fedzq.vercel.app/)
 ## **Future Features**
 
 - [ ] zod (schema validation library)
+- [ ] create token and send to client for client to request api (should bring this token in cookies to be able to pass api auth)
 - [ ] unit test
 
 ---
